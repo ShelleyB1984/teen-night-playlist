@@ -20,7 +20,30 @@ Respond ONLY with valid JSON — no markdown, no explanation outside the object:
 or
 {"approved": false, "reason": "One friendly sentence explaining why it was declined and encouraging them to try another song"}`;
 
-async function getSpotifyToken() {
+// Get a fresh user access token using the refresh token — runs automatically, no manual steps needed.
+async function getFreshUserToken() {
+  const creds = Buffer.from(
+    `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+  ).toString("base64");
+
+  const res = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${creds}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `grant_type=refresh_token&refresh_token=${process.env.SPOTIFY_REFRESH_TOKEN}`,
+  });
+
+  const data = await res.json();
+  if (!data.access_token) {
+    throw new Error("Failed to refresh Spotify token: " + JSON.stringify(data));
+  }
+  return data.access_token;
+}
+
+// Client credentials token — used for searching only (no user required)
+async function getSearchToken() {
   const creds = Buffer.from(
     `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
   ).toString("base64");
@@ -48,16 +71,13 @@ async function searchSpotify(token, song, artist) {
   return data.tracks?.items?.[0] || null;
 }
 
-async function addToPlaylist(track) {
-  // We need a user OAuth token with playlist-modify-public scope to add tracks.
-  // The SPOTIFY_USER_TOKEN env var must be a long-lived token you refresh periodically,
-  // or you can implement a full OAuth refresh flow (see SETUP.md for instructions).
+async function addToPlaylist(track, userToken) {
   const res = await fetch(
     `https://api.spotify.com/v1/playlists/${process.env.SPOTIFY_PLAYLIST_ID}/tracks`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.SPOTIFY_USER_TOKEN}`,
+        Authorization: `Bearer ${userToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ uris: [track.uri] }),
@@ -132,9 +152,9 @@ export const handler = async (event) => {
       };
     }
 
-    // 2. Spotify search
-    const token = await getSpotifyToken();
-    const track = await searchSpotify(token, song.trim(), artist.trim());
+    // 2. Spotify search (uses client credentials — no user token needed)
+    const searchToken = await getSearchToken();
+    const track = await searchSpotify(searchToken, song.trim(), artist.trim());
 
     if (!track) {
       return {
@@ -147,8 +167,9 @@ export const handler = async (event) => {
       };
     }
 
-    // 3. Add to playlist
-    const added = await addToPlaylist(track);
+    // 3. Get a fresh user token via refresh token, then add to playlist
+    const userToken = await getFreshUserToken();
+    const added = await addToPlaylist(track, userToken);
 
     if (!added) {
       return {
