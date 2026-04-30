@@ -178,12 +178,11 @@ export const handler = async (event) => {
         },
       }),
     };
-  } catch (err) {
+ } catch (err) {
     console.error("submit-song error:", err);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: "Server error. Please try again." }),
+      body: JSON.stringify({ error: "Server error: " + err.message }),
     };
   }
-};
