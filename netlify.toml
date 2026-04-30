@@ -1,14 +1,11 @@
-# netlify.toml — Netlify configuration
-
 [build]
-  publish = "public"          # your static files live here
-  functions = "netlify/functions"  # serverless functions live here
+  publish = "public"
+  functions = "netlify/functions"
 
 [functions]
-  node_bundler = "esbuild"    # fast bundler that supports ES modules
+  node_bundler = "esbuild"
 
-# Redirect all /api/* calls to the Netlify functions
 [[redirects]]
   from = "/api/*"
-  to   = "/.netlify/functions/:splat"
+  to = "/.netlify/functions/:splat"
   status = 200
