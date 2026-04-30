@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teen Nights — Anniversary Playlist</title>
+
+<style>
+@font-face {
+  font-family: 'ZonaPro';
+  src: url('ZonaPro-Bold.otf') format('opentype');
+  font-weight: 700; font-style: normal;
+}
+@font-face {
+  font-family: 'ZonaPro';
+  src: url('ZonaPro-BoldItalic.otf') format('opentype');
+  font-weight: 700; font-style: italic;
+}
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
+
+:root {
+  --bg:           #07070f;
+  --card:         rgba(255,255,255,0.055);
+  --card-border:  rgba(255,255,255,0.10);
+  --card-border2: rgba(255,255,255,0.16);
+  --cyan:         #2ec8f0;
+  --cyan-lt:      #72ddf8;
+  --orange:       #f5923a;
+  --gold:         #d4b842;
+  --gold-glow:    #ffe87a;
+  --white:        #f0f0fa;
+  --muted:        rgba(200,210,240,0.50);
+  --muted2:       rgba(200,210,240,0.28);
+  --g:            #1DB954;
+  --grad:         linear-gradient(135deg, var(--orange) 0%, var(--cyan) 100%);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Cosmic background */
+.bg-img {
+  position: fixed; inset: 0; z-index: 0;
+  background: url('bg.jpg') center center / cover no-repeat;
+  opacity: 0.52;
+}
+.bg-veil {
+  position: fixed; inset: 0; z-index: 1;
+  background: linear-gradient(180deg,
+    rgba(7,7,15,0.30) 0%,
+    rgba(7,7,15,0.55) 55%,
+    rgba(7,7,15,0.88) 100%);
+}
+
+.page {
+  position: relative; z-index: 2;
+  max-width: 1120px; margin: 0 auto; padding: 0 24px 100px;
+}
+
+/* ── Top bar ── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 28px 0 0;
+  animation: fadeDown .6s ease both;
+}
+.nav-logo { display: flex; align-items: center; gap: 12px; }
+.nav-logo img { height: 40px; filter: drop-shadow(0 0 10px rgba(46,200,240,.5)); }
+.nav-brand {
+  font-family: 'ZonaPro', sans-serif; font-size: .88rem;
+  letter-spacing: .1em; text-transform: uppercase; line-height: 1.25;
+}
+.nav-brand small {
+  display: block; font-family: 'DM Sans', sans-serif; font-weight: 300;
+  font-size: .63rem; letter-spacing: .16em; color: var(--muted);
+  text-transform: uppercase; margin-top: 1px;
+}
+.playlist-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--g); color: #000;
+  font-family: 'ZonaPro', sans-serif; font-size: .72rem;
+  letter-spacing: .07em; text-transform: uppercase;
+  padding: 10px 20px; border-radius: 100px;
+  text-decoration: none; transition: transform .15s, box-shadow .15s; white-space: nowrap;
+}
+.playlist-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(29,185,84,.4); }
+.playlist-btn svg { width: 15px; height: 15px; fill: #000; flex-shrink: 0; }
+
+/* ── Hero ── */
+.hero {
+  position: relative; text-align: center; padding: 50px 0 16px;
+  animation: fadeDown .7s .05s ease both;
+}
+.hero-swoosh-bg {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 540px; max-width: 90vw; opacity: 0.18;
+  pointer-events: none; filter: blur(2px);
+}
+.anniversary-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid rgba(212,184,66,.42);
+  background: rgba(212,184,66,.07);
+  color: var(--gold-glow);
+  font-size: .76rem; letter-spacing: .13em; text-transform: uppercase;
+  padding: 6px 18px; border-radius: 100px; margin-bottom: 26px;
+  position: relative; z-index: 1;
+}
+.hero-logo {
+  width: 320px; max-width: 78vw;
+  filter: drop-shadow(0 0 20px rgba(212,184,66,.6)) drop-shadow(0 0 45px rgba(212,184,66,.25));
+  position: relative; z-index: 1; margin-bottom: 6px;
+  animation: logoPulse 4s ease-in-out infinite;
+}
+@keyframes logoPulse {
+  0%,100% { filter: drop-shadow(0 0 20px rgba(212,184,66,.60)) drop-shadow(0 0 45px rgba(212,184,66,.25)); }
+  50%     { filter: drop-shadow(0 0 30px rgba(212,184,66,.85)) drop-shadow(0 0 65px rgba(212,184,66,.42)); }
+}
+.hero-sub {
+  font-size: 1.03rem; line-height: 1.7; color: var(--muted);
+  max-width: 490px; margin: 16px auto 0;
+  position: relative; z-index: 1;
+}
+
+/* Swoosh divider */
+.swoosh-divider {
+  display: block; width: 100%; max-width: 600px;
+  margin: 34px auto 42px;
+  opacity: 0.65;
+  filter: drop-shadow(0 0 14px rgba(46,200,240,.42));
+  animation: fadeUp .8s .2s ease both;
+}
+
+/* ── Grid ── */
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+@media (max-width: 740px) { .cols { grid-template-columns: 1fr; } }
+.col-left  { animation: fadeUp .6s .10s ease both; }
+.col-right { animation: fadeUp .6s .18s ease both; }
+
+/* ── Glass card ── */
+.card {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 22px; padding: 28px;
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  position: relative; overflow: hidden;
+}
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1.5px;
+  background: var(--grad); opacity: .65;
+}
+.card-title {
+  font-family: 'ZonaPro', sans-serif; font-size: .92rem;
+  letter-spacing: .07em; text-transform: uppercase;
+  margin-bottom: 22px;
+  display: flex; align-items: center; gap: 10px;
+}
+.card-title-icon {
+  width: 33px; height: 33px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .95rem; flex-shrink: 0;
+}
+.icon-submit { background: rgba(245,146,58,.17); }
+.icon-feed   { background: rgba(29,185,84,.14); }
+
+/* ── Form ── */
+label {
+  display: block;
+  font-family: 'ZonaPro', sans-serif; font-size: .63rem;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px;
+}
+input[type="text"] {
+  width: 100%; background: rgba(0,0,0,.38);
+  border: 1.5px solid var(--card-border2); border-radius: 12px;
+  color: var(--white); font-family: 'DM Sans', sans-serif; font-size: .96rem;
+  padding: 13px 16px; outline: none; margin-bottom: 16px;
+  transition: border-color .2s, box-shadow .2s;
+}
+input[type="text"]:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(46,200,240,.12); }
+input[type="text"]::placeholder { color: var(--muted2); }
+
+.rules {
+  background: rgba(212,184,66,.05); border: 1px solid rgba(212,184,66,.18);
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 20px;
+}
+.rules-hd {
+  font-family: 'ZonaPro', sans-serif; font-size: .63rem;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+}
+.rules ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.rules li { font-size: .83rem; color: var(--muted); display: flex; align-items: baseline; gap: 8px; }
+.rules li::before { content: '✓'; color: var(--gold); font-weight: 700; font-size: .74rem; flex-shrink: 0; }
+
+.btn {
+  width: 100%; background: var(--grad); color: #fff; border: none;
+  border-radius: 13px; font-family: 'ZonaPro', sans-serif;
+  font-size: .88rem; letter-spacing: .08em; text-transform: uppercase;
+  padding: 15px; cursor: pointer;
+  transition: transform .15s, box-shadow .15s, opacity .15s;
+  position: relative; overflow: hidden;
+}
+.btn::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.13) 0%, transparent 60%);
+  pointer-events: none;
+}
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(46,200,240,.28), 0 4px 14px rgba(245,146,58,.22);
+}
+.btn:active:not(:disabled) { transform: none; }
+.btn:disabled { opacity: .38; cursor: not-allowed; }
+
+/* Steps */
+.steps { display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+.step { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.step-n {
+  width: 29px; height: 29px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'ZonaPro', sans-serif; font-size: .7rem;
+  background: rgba(0,0,0,.4); border: 1.5px solid var(--card-border2); color: var(--muted);
+  transition: all .3s;
+}
+.step.active .step-n { background: var(--grad); border-color: transparent; color: #fff; }
+.step.done   .step-n { background: var(--g); border-color: transparent; color: #000; }
+.step-lbl { font-size: .6rem; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; }
+.step-line { height: 1.5px; width: 38px; background: var(--card-border2); margin-bottom: 17px; }
+
+/* Status */
+.status {
+  display: none; border-radius: 13px; padding: 15px 16px;
+  margin-top: 14px; animation: fadeUp .35s ease both;
+  align-items: flex-start; gap: 11px;
+}
+.status.show { display: flex; }
+.status.checking { background: rgba(46,200,240,.07);  border: 1px solid rgba(46,200,240,.22); }
+.status.approved { background: rgba(29,185,84,.08);   border: 1px solid rgba(29,185,84,.28); }
+.status.rejected { background: rgba(245,146,58,.07);  border: 1px solid rgba(245,146,58,.24); }
+.status.err      { background: rgba(212,184,66,.06);  border: 1px solid rgba(212,184,66,.22); }
+.s-icon  { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+.s-title { font-family: 'ZonaPro', sans-serif; font-size: .83rem; letter-spacing: .04em; margin-bottom: 3px; }
+.status.checking .s-title { color: var(--cyan-lt); }
+.status.approved .s-title { color: #4dda80; }
+.status.rejected .s-title { color: var(--orange); }
+.status.err      .s-title { color: var(--gold-glow); }
+.s-msg   { font-size: .82rem; color: var(--muted); line-height: 1.55; }
+.s-extra { margin-top: 10px; }
+.spot-link {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--g); color: #000; text-decoration: none;
+  font-family: 'ZonaPro', sans-serif; font-size: .7rem; letter-spacing: .07em; text-transform: uppercase;
+  padding: 7px 15px; border-radius: 100px; transition: opacity .2s;
+}
+.spot-link:hover { opacity: .82; }
+
+/* Spinner */
+.spinner {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,.1); border-top-color: var(--cyan);
+  border-radius: 50%; animation: spin .65s linear infinite;
+  vertical-align: middle; margin-right: 7px;
+}
+
+/* Feed */
+.feed-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; gap: 10px; flex-wrap: wrap; }
+.feed-count { font-size: .79rem; color: var(--muted); }
+.feed-count strong { color: var(--white); font-weight: 500; }
+.refresh-btn {
+  background: none; border: 1px solid var(--card-border2); border-radius: 8px;
+  color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: .74rem;
+  padding: 5px 11px; cursor: pointer;
+  transition: color .2s, border-color .2s;
+  display: flex; align-items: center; gap: 5px;
+}
+.refresh-btn:hover { color: var(--white); border-color: var(--cyan); }
+.spin-sm {
+  display: inline-block; width: 11px; height: 11px;
+  border: 1.5px solid rgba(255,255,255,.1); border-top-color: var(--cyan);
+  border-radius: 50%; animation: spin .65s linear infinite;
+}
+.feed-list { display: flex; flex-direction: column; gap: 9px; }
+.feed-item {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(0,0,0,.30); border: 1px solid var(--card-border);
+  border-radius: 13px; padding: 11px 13px;
+  text-decoration: none; color: var(--white);
+  transition: border-color .2s, background .2s, transform .15s;
+  animation: fadeUp .4s ease both;
+}
+.feed-item:hover { border-color: rgba(46,200,240,.35); background: rgba(46,200,240,.05); transform: translateX(3px); }
+.feed-item.new-track { border-color: rgba(29,185,84,.45); background: rgba(29,185,84,.06); animation: newPop .5s ease both; }
+.track-art { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: rgba(255,255,255,.05); }
+.track-art-ph {
+  width: 44px; height: 44px; border-radius: 8px; flex-shrink: 0;
+  background: rgba(255,255,255,.05); display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+}
+.track-info { flex: 1; min-width: 0; }
+.track-name { font-weight: 500; font-size: .87rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+.track-artist { font-size: .75rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.track-new {
+  font-family: 'ZonaPro', sans-serif; font-size: .57rem; letter-spacing: .07em; text-transform: uppercase;
+  background: var(--g); color: #000; padding: 3px 9px; border-radius: 100px; flex-shrink: 0;
+}
+.track-icon { flex-shrink: 0; color: var(--g); opacity: .6; font-size: .95rem; }
+.feed-empty { text-align: center; padding: 34px 20px; color: var(--muted); font-size: .88rem; }
+.feed-empty big { display: block; font-size: 2rem; margin-bottom: 10px; }
+.feed-loading { text-align: center; padding: 30px; color: var(--muted); font-size: .85rem; }
+.view-all-btn {
+  display: block; text-align: center; margin-top: 13px;
+  background: none; border: 1px solid var(--card-border2);
+  border-radius: 12px; color: var(--muted);
+  font-family: 'DM Sans', sans-serif; font-size: .83rem;
+  padding: 11px; text-decoration: none;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.view-all-btn:hover { color: var(--white); border-color: var(--cyan); background: rgba(46,200,240,.06); }
+
+/* Footer */
+footer {
+  text-align: center; margin-top: 72px;
+  color: var(--muted2); font-size: .73rem; line-height: 1.85;
+  animation: fadeUp .7s .3s ease both;
+}
+footer strong { color: var(--muted); font-weight: 500; }
+.footer-swoosh { display: block; width: 160px; margin: 0 auto 18px; opacity: 0.32; filter: drop-shadow(0 0 8px rgba(46,200,240,.4)); }
+
+/* Animations */
+@keyframes fadeDown { from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(13px) }to{opacity:1;transform:translateY(0)} }
+@keyframes spin     { to{transform:rotate(360deg)} }
+@keyframes newPop   { 0%{transform:scale(.97);opacity:0}60%{transform:scale(1.02) translateX(3px)}100%{transform:scale(1) translateX(3px);opacity:1} }
+
+.feed-item:nth-child(1){animation-delay:.03s}.feed-item:nth-child(2){animation-delay:.07s}
+.feed-item:nth-child(3){animation-delay:.11s}.feed-item:nth-child(4){animation-delay:.15s}
+.feed-item:nth-child(5){animation-delay:.19s}.feed-item:nth-child(6){animation-delay:.23s}
+.feed-item:nth-child(7){animation-delay:.27s}.feed-item:nth-child(8){animation-delay:.31s}
+.feed-item:nth-child(9){animation-delay:.35s}.feed-item:nth-child(10){animation-delay:.39s}
+</style>
+</head>
+<body>
+
+<div class="bg-img"></div>
+<div class="bg-veil"></div>
+
+<div class="page">
+
+  <nav class="topbar">
+    <div class="nav-logo">
+      <img src="swoosh.png" alt="Teen Nights">
+      <div class="nav-brand">
+        Teen Nights
+        <small>2nd Anniversary</small>
+      </div>
+    </div>
+    <a class="playlist-btn" id="playlistHeaderBtn" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      Open Playlist
+    </a>
+  </nav>
+
+  <div class="hero">
+    <img class="hero-swoosh-bg" src="swoosh.png" alt="">
+    <div class="anniversary-pill">🎉 2nd Anniversary Celebration</div>
+    <img class="hero-logo" src="logo.png" alt="Teen Nights">
+    <p class="hero-sub">Suggest a song for the official anniversary playlist — if it passes our vibe check, it gets added to Spotify automatically.</p>
+  </div>
+
+  <img class="swoosh-divider" src="swoosh.png" alt="">
+
+  <div class="cols">
+
+    <div class="col-left">
+      <div class="card">
+        <div class="card-title">
+          <div class="card-title-icon icon-submit">🎵</div>
+          Suggest a Song
+        </div>
+
+        <div class="steps">
+          <div class="step active" id="s1"><div class="step-n">1</div><div class="step-lbl">Suggest</div></div>
+          <div class="step-line"></div>
+          <div class="step" id="s2"><div class="step-n">2</div><div class="step-lbl">AI Check</div></div>
+          <div class="step-line"></div>
+          <div class="step" id="s3"><div class="step-n">3</div><div class="step-lbl">Added!</div></div>
+        </div>
+
+        <label>Song Title</label>
+        <input type="text" id="songTitle" placeholder="e.g. luther" autocomplete="off">
+
+        <label>Artist Name</label>
+        <input type="text" id="artistName" placeholder="e.g. Kendrick Lamar" autocomplete="off">
+
+        <label>Your Name <span style="font-family:'DM Sans';font-weight:300;text-transform:none;letter-spacing:0;color:var(--muted2)">(optional)</span></label>
+        <input type="text" id="submitterName" placeholder="e.g. Jordan" autocomplete="off">
+
+        <div class="rules">
+          <div class="rules-hd">📋 Playlist Rules</div>
+          <ul>
+            <li>No explicit lyrics or adult content</li>
+            <li>No glorification of drugs, alcohol, or violence</li>
+            <li>Any genre — pop, hip-hop, k-pop, country, R&amp;B…</li>
+            <li>Keep it positive and inclusive!</li>
+          </ul>
+        </div>
+
+        <button class="btn" id="submitBtn" onclick="handleSubmit()">🎵 Submit Song</button>
+
+        <div class="status" id="statusBox">
+          <div class="s-icon" id="sIcon"></div>
+          <div style="flex:1">
+            <div class="s-title" id="sTitle"></div>
+            <div class="s-msg"   id="sMsg"></div>
+            <div class="s-extra" id="sExtra"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="card">
+        <div class="card-title">
+          <div class="card-title-icon icon-feed">🟢</div>
+          Recently Added
+        </div>
+        <div class="feed-meta">
+          <div class="feed-count" id="feedCount"></div>
+          <button class="refresh-btn" id="refreshBtn" onclick="loadFeed(true)">↻ Refresh</button>
+        </div>
+        <div class="feed-list" id="feedList">
+          <div class="feed-loading"><span class="spinner"></span> Loading playlist…</div>
+        </div>
+        <a id="viewAllBtn" class="view-all-btn" href="#" target="_blank" rel="noopener" style="display:none;">
+          🎧 Open Full Playlist on Spotify
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <img class="footer-swoosh" src="swoosh.png" alt="">
+    Built for <strong>Teen Nights 2nd Anniversary</strong> 🎉<br>
+    Content reviewed by Claude AI &nbsp;·&nbsp; Music via Spotify &nbsp;·&nbsp; Hosted free on Netlify
+  </footer>
+
+</div>
+
+<script>
+const SPOTIFY_PLAYLIST_URL = "YOUR_SPOTIFY_PLAYLIST_URL_HERE";
+document.getElementById("playlistHeaderBtn").href = SPOTIFY_PLAYLIST_URL;
+
+let feedTrackUris = new Set();
+let feedLoaded    = false;
+
+async function handleSubmit() {
+  const song      = document.getElementById("songTitle").value.trim();
+  const artist    = document.getElementById("artistName").value.trim();
+  const submitter = document.getElementById("submitterName").value.trim();
+  if (!song || !artist) { showStatus("err","⚠️","Missing Info","Please enter both a song title and artist name."); return; }
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Reviewing your song…';
+  setStep(2);
+  showStatus("checking","🔍","Reviewing…",`Claude is checking "${song}" by ${artist} against our playlist standards.`);
+  try {
+    const res  = await fetch("/.netlify/functions/submit-song",{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({song,artist,submitter}) });
+    const data = await res.json();
+    btn.disabled = false; btn.innerHTML = "🎵 Submit Song";
+    if (data.status === "approved") {
+      setStep(3);
+      const t = data.track;
+      document.getElementById("songTitle").value = "";
+      document.getElementById("artistName").value = "";
+      document.getElementById("submitterName").value = "";
+      showStatus("approved","🎉","Added to the Playlist!",`${submitter?submitter+"'s":"Your"} suggestion — "${t.name}" by ${t.artist} — passed the vibe check and is now live on the playlist!`);
+      document.getElementById("sExtra").innerHTML = `<a class="spot-link" href="${t.url}" target="_blank" rel="noopener">🎵 Listen on Spotify</a>`;
+      setTimeout(()=>loadFeed(true),2500);
+    } else if (data.status==="rejected") { setStep(1); showStatus("rejected","❌","Not Added",data.reason);
+    } else if (data.status==="not_found"){ setStep(1); showStatus("err","🔎","Not Found on Spotify",data.reason);
+    } else { setStep(1); showStatus("err","⚠️","Something Went Wrong",data.reason||data.error||"Please try again."); }
+  } catch(err) {
+    btn.disabled=false; btn.innerHTML="🎵 Submit Song"; setStep(1);
+    showStatus("err","⚠️","Network Error","Could not reach the server. Check your connection and try again.");
+    console.error(err);
+  }
+}
+
+async function loadFeed(manual=false) {
+  const list=document.getElementById("feedList");
+  const rb=document.getElementById("refreshBtn");
+  const ce=document.getElementById("feedCount");
+  if(manual){rb.innerHTML='<span class="spin-sm"></span> Loading…';rb.disabled=true;}
+  try {
+    const res=await fetch("/.netlify/functions/get-playlist");
+    const data=await res.json();
+    if(data.error) throw new Error(data.error);
+    if(data.playlistUrl){
+      document.getElementById("playlistHeaderBtn").href=data.playlistUrl;
+      const va=document.getElementById("viewAllBtn"); va.href=data.playlistUrl; va.style.display="block";
+    }
+    ce.innerHTML=data.totalTracks?`<strong>${data.totalTracks}</strong> songs on the playlist`:"";
+    renderFeed(data.tracks||[]);
+    feedLoaded=true;
+  } catch(err){
+    list.innerHTML=`<div class="feed-empty"><big>😕</big>Couldn't load playlist right now. Try refreshing!</div>`;
+    console.error(err);
+  } finally { rb.innerHTML="↻ Refresh"; rb.disabled=false; }
+}
+
+function renderFeed(tracks){
+  const list=document.getElementById("feedList");
+  if(!tracks.length){list.innerHTML=`<div class="feed-empty"><big>🎵</big>No songs yet — be the first to add one!</div>`;return;}
+  const newUris=new Set(tracks.map(t=>t.url));
+  list.innerHTML="";
+  tracks.slice(0,10).forEach(t=>{
+    const isNew=feedLoaded&&!feedTrackUris.has(t.url);
+    const a=document.createElement("a");
+    a.className="feed-item"+(isNew?" new-track":"");
+    a.href=t.url; a.target="_blank"; a.rel="noopener";
+    const art=t.image?`<img class="track-art" src="${t.image}" alt="${esc(t.name)}" loading="lazy">`:`<div class="track-art-ph">🎵</div>`;
+    a.innerHTML=`${art}<div class="track-info"><div class="track-name">${esc(t.name)}</div><div class="track-artist">${esc(t.artist)}</div></div>${isNew?'<span class="track-new">New</span>':'<span class="track-icon">♫</span>'}`;
+    list.appendChild(a);
+  });
+  feedTrackUris=newUris;
+}
+
+function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+function showStatus(type,icon,title,msg){
+  const box=document.getElementById("statusBox");
+  box.className="status show "+type;
+  document.getElementById("sIcon").textContent=icon;
+  document.getElementById("sTitle").textContent=title;
+  document.getElementById("sMsg").textContent=msg;
+  document.getElementById("sExtra").innerHTML="";
+  box.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+function setStep(n){
+  ["s1","s2","s3"].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.classList.toggle("active",i+1===n);
+    el.classList.toggle("done",i+1<n);
+  });
+}
+
+loadFeed();
+setInterval(()=>loadFeed(false),30000);
+</script>
+</body>
+</html>
